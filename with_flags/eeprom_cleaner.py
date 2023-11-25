@@ -19,26 +19,17 @@ def bin_to_hex(bin_data:str) -> str:
     return hex_data
 
 
-def read_data(address:str) -> str:
+def write_data(addr:str, data:str) -> None:
 
-    GPIO.output(OE, GPIO.LOW)
-    
-    #We dont need those first 2 bits
-    eeprom_addr = hex_to_bin(address)[2:]
-    set_address(eeprom_addr)
-
+    set_address(hex_to_bin(addr)[2:])
+    set_data(hex_to_bin(data))
     time.sleep(0.20)
+    
+    GPIO.output(WE, GPIO.LOW)
+    time.sleep(0.20)
+    GPIO.output(WE, GPIO.HIGH)
 
-    byte_str = ""
-
-    for pin in data_pins:
-      byte_str += "1" if GPIO.input(pin) == 1 else "0"
-
-    hex_str = bin_to_hex(byte_str)
-
-    GPIO.output(OE, GPIO.HIGH)
-
-    return hex_str
+    print(addr, data)
 
 
 def set_address(eeprom_address:str) -> None:
@@ -46,22 +37,22 @@ def set_address(eeprom_address:str) -> None:
         GPIO.output(address_pins[index], GPIO.HIGH if bit == "1" else GPIO.LOW)
 
 
-def bulk_reader() -> None:
+def set_data(eeprom_data:str) -> None:
+    for index, bit in enumerate(eeprom_data):
+        GPIO.output(data_pins[index], GPIO.HIGH if bit == "1" else GPIO.LOW)
+
+def clean() -> None:
 
     for flag_hex_bit, flag_bits in enumerate(["00", "01", "10", "11"]):
-      print(f"CF={flag_bits[0]} ZF={flag_bits[1]}", flag_hex_bit)
 
       for step in range(16):
-          step_string = ""
           step_hex = hex(step)
 
           for opcode in range(16):
               opcode_hex = hex(opcode)
               addr = "0x" + str(flag_hex_bit) + step_hex[2:] + opcode_hex[2:]
-              controlword = read_data(addr)
-              step_string += controlword + " "
+              write_data(addr, "0x00")
 
-          print(step_string)
 
       print("\n")
 
@@ -80,7 +71,7 @@ if __name__ == "__main__":
         GPIO.setup(pi, GPIO.OUT)
 
     for pi_ in data_pins:
-        GPIO.setup(pi_, GPIO.IN, GPIO.PUD_DOWN)
+        GPIO.setup(pi_, GPIO.OUT)
 
     WE = 19 #Write Enable
     OE = 12 #Output Enable
@@ -88,8 +79,8 @@ if __name__ == "__main__":
     for pins in [WE, OE]:
         GPIO.setup(pins, GPIO.OUT, initial=GPIO.HIGH)
 
-    GPIO.output(WE, GPIO.HIGH)
+    GPIO.output(OE, GPIO.HIGH)
 
-    bulk_reader()
+    clean()
 
     GPIO.cleanup()

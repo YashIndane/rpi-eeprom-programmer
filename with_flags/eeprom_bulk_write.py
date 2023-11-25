@@ -23,15 +23,17 @@ def bin_to_hex(bin_data:str) -> str:
 
 def write(addr:str, data:str) -> None:
 
-    set_address(hex_to_bin(addr))
+    #We dont need those first 2 bits
+    set_address(hex_to_bin(addr)[2:])
+
     set_data(hex_to_bin(data))
-    time.sleep(0.5)
+    time.sleep(0.20)
     
     GPIO.output(WE, GPIO.LOW)
-    time.sleep(0.5)
+    time.sleep(0.20)
     GPIO.output(WE, GPIO.HIGH)
 
-    print("Write Successful!")
+    #print("Write Successful!")
 
 
 def set_address(eeprom_address:str) -> None:
@@ -74,8 +76,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     filepath = args.eefile
 
-
-    address_pins = [14, 15, 25, 8, 7, 16, 20, 21]
+    #GPIO5 - CF (A8), GPIO6 - ZF (A9)
+    address_pins = [5, 6, 14, 15, 25, 8, 7, 16, 20, 21]
     data_pins = [17, 27, 22, 10, 9, 11, 13, 26]
 
     WE = 19  #Write Enable
