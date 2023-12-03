@@ -2,24 +2,24 @@ The code & schematic are MIT licensed.
 
 The circuit and code are according to SAP-1.
 
-| INS | OPCODE |
-|-----|--------|
-| NOP | `0x00` |
-| LDA | `0x01` |
-| ADD | `0x02` |
-| SUB | `0x03` |
-| STA | `0x04` |
-| LDI | `0x05` |
-| JMP | `0x06` |
-| JC  | `0x07` |
-| JZ  | `0x08` |
-| --  | `0x09` |
-| --  | `0x0a` |
-| --  | `0x0b` |
-| --  | `0x0c` |
-| --  | `0x0d` |
-| OUT | `0x0e` |
-| HLT | `0x0f` |
+| INS       | OPCODE |
+|-----------|--------|
+| ***NOP*** | `0x00` |
+| ***LDA*** | `0x01` |
+| ***ADD*** | `0x02` |
+| ***SUB*** | `0x03` |
+| ***STA*** | `0x04` |
+| ***LDI*** | `0x05` |
+| ***JMP*** | `0x06` |
+| ***JC***  | `0x07` |
+| ***JZ***  | `0x08` |
+| --        | `0x09` |
+| --        | `0x0a` |
+| --        | `0x0b` |
+| --        | `0x0c` |
+| --        | `0x0d` |
+| ***OUT*** | `0x0e` |
+| ***HLT*** | `0x0f` |
 
 |  ***LEFT EEPROM BITS***  |  ***RIGHT EEPROM BITS*** |
 ---------------------------|--------------------------|
